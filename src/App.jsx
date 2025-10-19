@@ -79,8 +79,8 @@ export default function App() {
           <Keypad onAction={handleAction} isDarkMode={isDarkMode} />
         </div>
 
-        {/* Fixed History/Memory Panel at Bottom */}
-        <div className="h-[25vh] min-h-0">
+        {/* Fluid History/Memory Panel at Bottom */}
+        <div className="mobile-sidebar min-h-0">
           <SidePanel
             activeTab={activeTab}
             onTabChange={handleTabChange}

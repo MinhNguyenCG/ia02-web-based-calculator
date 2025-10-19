@@ -19,7 +19,7 @@ export default function Display({
     >
       {/* Expression Line */}
       <div
-        className={`text-sm sm:text-base lg:text-lg mb-2 sm:mb-3 lg:mb-4 h-6 sm:h-7 lg:h-8 overflow-hidden text-right font-light ${
+        className={`text-responsive-sm mb-2 sm:mb-3 lg:mb-4 h-6 sm:h-7 lg:h-8 overflow-hidden text-right font-light ${
           isDarkMode ? "text-slate-400" : "text-gray-500"
         }`}
         aria-label="Expression"
@@ -29,7 +29,7 @@ export default function Display({
 
       {/* Main Display */}
       <div
-        className={`text-right text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight ${displayTextColor(
+        className={`text-right text-responsive-4xl font-light tracking-tight ${displayTextColor(
           { isDark: isDarkMode, hasError: !!error }
         )}`}
         role="status"

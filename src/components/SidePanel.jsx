@@ -17,7 +17,7 @@ export default function SidePanel({
   isDarkMode = true,
 }) {
   return (
-    <div className="w-full lg:w-96 xl:w-80 h-full flex flex-col">
+    <div className="w-full lg:w-80 xl:w-96 h-full flex flex-col">
       {/* Tab Navigation */}
       <div className="flex border-b border-slate-700/50">
         <button

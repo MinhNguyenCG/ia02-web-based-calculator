@@ -39,7 +39,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  /* Responsive text sizing utilities */
+  /* Responsive text sizing utilities - simplified */
   .text-responsive-xs {
     @apply text-xs sm:text-sm;
   }
@@ -146,7 +146,7 @@
     overflow: hidden;
   }
 
-  /* Mobile specific styles */
+  /* Mobile layout improvements */
   @media (max-width: 1023px) {
     .calc-container {
       height: 100vh;
@@ -154,56 +154,11 @@
       background: transparent;
     }
 
-    /* Ensure proper height distribution on mobile */
-    .calc-container > div {
-      height: 100%;
-    }
-
-    /* Mobile calculator card should take appropriate height */
-    .calc-container .rounded-md {
-      flex-shrink: 0;
-    }
-
-    /* Optimize calculator space on large screens */
-    @media (min-height: 900px) and (max-height: 950px) {
-      .calc-container .rounded-md {
-        flex: 1;
-        min-height: 0;
-      }
-    }
-
-    /* Mobile history/memory panel using viewport height with min/max limits */
-    .calc-container .h-\[25vh\] {
-      height: 25vh; /* Small screens: 25vh */
-      min-height: 8rem; /* Minimum height to ensure usability */
-      max-height: 12rem; /* Maximum height to prevent taking too much space */
-    }
-
-    /* Medium screens: 28-30vh */
-    @media (min-height: 601px) and (max-height: 800px) {
-      .calc-container .h-\[25vh\] {
-        height: 28vh;
-        min-height: 10rem;
-        max-height: 16rem;
-      }
-    }
-
-    /* iPhone 14 Pro Max: 28vh */
-    @media (min-height: 801px) and (max-height: 950px) {
-      .calc-container .h-\[25vh\] {
-        height: 28vh;
-        min-height: 12rem;
-        max-height: 18rem;
-      }
-    }
-
-    /* Large screens: 32vh */
-    @media (min-height: 951px) {
-      .calc-container .h-\[25vh\] {
-        height: 32vh;
-        min-height: 14rem;
-        max-height: 20rem;
-      }
+    /* Mobile sidebar panel with fluid height */
+    .calc-container .mobile-sidebar {
+      height: clamp(8rem, 25vh, 20rem);
+      min-height: 8rem;
+      max-height: 20rem;
     }
 
     /* Ensure scroll area uses full height on mobile */
@@ -213,7 +168,7 @@
 
     .calc-container .sidebar-scroll {
       height: 100%;
-      max-height: none; /* Remove any max-height constraints on mobile */
+      max-height: none;
     }
 
     /* Mobile-specific layout for History/Memory tabs */
@@ -226,7 +181,7 @@
     /* Ensure scroll container takes available space */
     .calc-container .flex-1.sidebar-scroll-container {
       flex: 1;
-      min-height: 0; /* Allow flex item to shrink */
+      min-height: 0;
     }
 
     /* Fixed clear button at bottom */
@@ -254,113 +209,63 @@
       border-bottom: 1px solid rgba(100, 116, 139, 0.1);
     }
 
-    /* Mobile scroll area padding - reduced */
+    /* Mobile scroll area padding - responsive */
     .calc-container .sidebar-scroll {
-      padding: 0.5rem;
+      padding: clamp(0.25rem, 0.5rem, 1rem);
     }
 
-    /* Mobile clear button padding - reduced */
+    /* Mobile clear button padding - responsive */
     .calc-container .clear-button-fixed {
-      padding: 0.5rem;
+      padding: clamp(0.25rem, 0.5rem, 1rem);
     }
 
-    /* Reduced container padding for mobile */
+    /* Responsive container padding */
     .calc-container {
-      padding: 0.5rem;
-    }
-
-    /* Small screens - minimal padding */
-    @media (max-width: 600px) {
-      .calc-container {
-        padding: 0.25rem;
-      }
-
-      .calc-container .sidebar-scroll {
-        padding: 0.25rem;
-      }
-
-      .calc-container .clear-button-fixed {
-        padding: 0.25rem;
-      }
-    }
-
-    /* Legacy height adjustments removed - now using viewport height with min/max limits */
-  }
-
-  /* Responsive key sizing for different screen heights - Optimized */
-  @media (max-height: 600px) {
-    .calc-key {
-      @apply h-10 sm:h-12 text-sm sm:text-base; /* Small screens: h-10 → h-12 (20% increase) */
+      padding: clamp(0.25rem, 0.5rem, 1rem);
     }
   }
 
-  @media (min-height: 601px) and (max-height: 800px) {
-    .calc-key {
-      @apply h-12 sm:h-14 text-base sm:text-lg; /* Medium screens: h-12 → h-14 (17% increase) */
-    }
+  /* Responsive key sizing with fluid approach */
+  .calc-key {
+    height: 100%;
+    min-height: clamp(2.5rem, 4vh, 5rem);
+    font-size: clamp(0.875rem, 2vw, 1.5rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  @media (min-height: 801px) and (max-height: 900px) {
-    .calc-key {
-      @apply h-14 sm:h-16 text-lg sm:text-xl; /* High screens: h-14 → h-16 */
-    }
+  /* Grid layout for calculator keypad */
+  .calc-keypad-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 0.25rem;
+    height: 100%;
   }
 
-  @media (min-height: 901px) {
-    .calc-key {
-      @apply h-16 sm:h-20 text-xl sm:text-2xl; /* Very high screens: h-16 → h-20 */
-    }
+  /* Ensure buttons fill their grid cells */
+  .calc-keypad-grid .calc-key {
+    width: 100%;
+    height: 100%;
+    min-height: auto;
+  }
+
+  /* Special grid areas for spanning buttons */
+  .calc-keypad-grid [style*="grid-area: zero-zero"] {
+    grid-column: span 2;
+  }
+
+  .calc-keypad-grid [style*="grid-area: equals"] {
+    grid-row: span 2;
   }
 
   /* Ensure calculator fits in viewport on mobile */
   @media (max-width: 640px) {
     .calc-container {
       height: 100vh;
-      height: 100dvh; /* Dynamic viewport height for mobile browsers */
+      height: 100dvh;
     }
-  }
-
-  /* Side panel scrollbar improvements */
-  .sidebar-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(156, 163, 175, 0.8) rgba(156, 163, 175, 0.1);
-  }
-
-  .sidebar-scroll::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .sidebar-scroll::-webkit-scrollbar-track {
-    background: rgba(156, 163, 175, 0.1);
-    border-radius: 3px;
-  }
-
-  .sidebar-scroll::-webkit-scrollbar-thumb {
-    background-color: rgba(156, 163, 175, 0.6);
-    border-radius: 3px;
-    border: 1px solid rgba(156, 163, 175, 0.2);
-  }
-
-  .sidebar-scroll::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(156, 163, 175, 0.8);
-  }
-
-  /* Dark mode scrollbar for sidebar */
-  .dark .sidebar-scroll {
-    scrollbar-color: rgba(100, 116, 139, 0.8) rgba(100, 116, 139, 0.1);
-  }
-
-  .dark .sidebar-scroll::-webkit-scrollbar-track {
-    background: rgba(100, 116, 139, 0.1);
-  }
-
-  .dark .sidebar-scroll::-webkit-scrollbar-thumb {
-    background-color: rgba(100, 116, 139, 0.6);
-    border: 1px solid rgba(100, 116, 139, 0.2);
-  }
-
-  .dark .sidebar-scroll::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(100, 116, 139, 0.8);
   }
 
   /* Fixed clear button styling */
@@ -371,7 +276,6 @@
     backdrop-filter: blur(8px);
     border-top: 1px solid rgba(156, 163, 175, 0.1);
     z-index: 10;
-    /* Ensure button stays above scrollbar */
     margin-top: -1px;
   }
 

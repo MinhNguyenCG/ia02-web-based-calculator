@@ -59,7 +59,7 @@ const MemoryItem = memo(
         <div className={theme.valueButton}>
           <button
             onClick={handleLoadClick}
-            className="w-full text-left"
+            className="w-full text-right"
             aria-label={`Load memory value ${item.value}`}
           >
             <div className={`font-semibold ${theme.value}`}>

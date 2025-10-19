@@ -11,10 +11,10 @@ const THEME_CLASSES = {
       "group w-full p-3 sm:p-4 transition-all duration-150 hover:bg-slate-700/40",
     historyButton:
       "w-full text-right p-2 sm:p-3 rounded-lg transition-all duration-150",
-    expression: "text-slate-400 text-xs sm:text-sm",
-    result: "text-white text-lg sm:text-xl lg:text-2xl",
+    expression: "text-slate-400 text-responsive-xs",
+    result: "text-white text-responsive-lg",
     clearButton:
-      "text-xs sm:text-sm transition-colors duration-150 px-2 sm:px-3 py-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50",
+      "text-responsive-xs transition-colors duration-150 px-2 sm:px-3 py-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50",
   },
   light: {
     container: "text-center py-8 sm:py-12 text-gray-500",
@@ -23,10 +23,10 @@ const THEME_CLASSES = {
       "group w-full p-3 sm:p-4 transition-all duration-150 hover:bg-gray-200/60",
     historyButton:
       "w-full text-right p-2 sm:p-3 rounded-lg transition-all duration-150",
-    expression: "text-gray-500 text-xs sm:text-sm",
-    result: "text-gray-800 text-lg sm:text-xl lg:text-2xl",
+    expression: "text-gray-500 text-responsive-xs",
+    result: "text-gray-800 text-responsive-lg",
     clearButton:
-      "text-xs sm:text-sm transition-colors duration-150 px-2 sm:px-3 py-1 rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-200/50",
+      "text-responsive-xs transition-colors duration-150 px-2 sm:px-3 py-1 rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-200/50",
   },
 };
 

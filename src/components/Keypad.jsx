@@ -65,7 +65,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
 
   return (
     <div
-      className={`p-1 sm:p-2 lg:p-3 backdrop-blur-sm transition-all duration-300 h-full flex flex-col ${
+      className={`p-2 sm:p-3 lg:p-4 backdrop-blur-sm transition-all duration-300 h-full flex flex-col ${
         isDarkMode
           ? "bg-gradient-to-br from-slate-800/50 to-slate-900/50"
           : "bg-gradient-to-br from-gray-100/50 to-gray-200/50"
@@ -74,7 +74,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
       {/* Keypad Grid Container */}
       <div className="flex-1 flex flex-col justify-center">
         {/* Memory Row */}
-        <div className="grid grid-cols-5 gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
+        <div className="grid grid-cols-5 gap-1 sm:gap-2 mb-1 sm:mb-2">
           <MemoryButton
             label="MC"
             value="MC"
@@ -112,8 +112,21 @@ export default function Keypad({ onAction, isDarkMode = true }) {
           />
         </div>
 
-        {/* Row 1: %, CE, C, Backspace */}
-        <div className="grid grid-cols-4 gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
+        {/* Main Calculator Grid - 4 columns, 6 rows with proper spanning */}
+        <div
+          className="calc-keypad-grid flex-1"
+          style={{
+            gridTemplateAreas: `
+          "percent clear-entry clear backspace"
+          "reciprocal square sqrt divide"
+          "seven eight nine multiply"
+          "four five six subtract"
+          "one two three add"
+          "negate zero-zero decimal equals"
+        `,
+          }}
+        >
+          {/* Row 1: %, CE, C, Backspace */}
           <Key
             label="%"
             value="%"
@@ -121,6 +134,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="default"
             ariaLabel="Percent"
             isDarkMode={isDarkMode}
+            gridArea="percent"
           />
           <Key
             label="CE"
@@ -129,6 +143,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="default"
             ariaLabel="Clear Entry"
             isDarkMode={isDarkMode}
+            gridArea="clear-entry"
           />
           <Key
             label="C"
@@ -137,6 +152,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="default"
             ariaLabel="Clear"
             isDarkMode={isDarkMode}
+            gridArea="clear"
           />
           <Key
             label="⌫"
@@ -145,11 +161,10 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="default"
             ariaLabel="Backspace"
             isDarkMode={isDarkMode}
+            gridArea="backspace"
           />
-        </div>
 
-        {/* Row 2: 1/x, x², √x, ÷ */}
-        <div className="grid grid-cols-4 gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
+          {/* Row 2: 1/x, x², √x, ÷ */}
           <Key
             label="¹⁄ₓ"
             value="1/x"
@@ -157,6 +172,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="default"
             ariaLabel="Reciprocal"
             isDarkMode={isDarkMode}
+            gridArea="reciprocal"
           />
           <Key
             label="x²"
@@ -165,6 +181,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="default"
             ariaLabel="Square"
             isDarkMode={isDarkMode}
+            gridArea="square"
           />
           <Key
             label="²√x"
@@ -173,6 +190,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="default"
             ariaLabel="Square root"
             isDarkMode={isDarkMode}
+            gridArea="sqrt"
           />
           <Key
             label="÷"
@@ -181,11 +199,10 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="default"
             ariaLabel="Divide"
             isDarkMode={isDarkMode}
+            gridArea="divide"
           />
-        </div>
 
-        {/* Row 3: 7, 8, 9, × */}
-        <div className="grid grid-cols-4 gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
+          {/* Row 3: 7, 8, 9, × */}
           <Key
             label="7"
             value="7"
@@ -193,6 +210,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="number"
             ariaLabel="Seven"
             isDarkMode={isDarkMode}
+            gridArea="seven"
           />
           <Key
             label="8"
@@ -201,6 +219,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="number"
             ariaLabel="Eight"
             isDarkMode={isDarkMode}
+            gridArea="eight"
           />
           <Key
             label="9"
@@ -209,6 +228,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="number"
             ariaLabel="Nine"
             isDarkMode={isDarkMode}
+            gridArea="nine"
           />
           <Key
             label="×"
@@ -217,11 +237,10 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="default"
             ariaLabel="Multiply"
             isDarkMode={isDarkMode}
+            gridArea="multiply"
           />
-        </div>
 
-        {/* Row 4: 4, 5, 6, − */}
-        <div className="grid grid-cols-4 gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
+          {/* Row 4: 4, 5, 6, − */}
           <Key
             label="4"
             value="4"
@@ -229,6 +248,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="number"
             ariaLabel="Four"
             isDarkMode={isDarkMode}
+            gridArea="four"
           />
           <Key
             label="5"
@@ -237,6 +257,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="number"
             ariaLabel="Five"
             isDarkMode={isDarkMode}
+            gridArea="five"
           />
           <Key
             label="6"
@@ -245,6 +266,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="number"
             ariaLabel="Six"
             isDarkMode={isDarkMode}
+            gridArea="six"
           />
           <Key
             label="−"
@@ -253,11 +275,10 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="default"
             ariaLabel="Subtract"
             isDarkMode={isDarkMode}
+            gridArea="subtract"
           />
-        </div>
 
-        {/* Row 5: 1, 2, 3, + */}
-        <div className="grid grid-cols-4 gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
+          {/* Row 5: 1, 2, 3, + */}
           <Key
             label="1"
             value="1"
@@ -265,6 +286,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="number"
             ariaLabel="One"
             isDarkMode={isDarkMode}
+            gridArea="one"
           />
           <Key
             label="2"
@@ -273,6 +295,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="number"
             ariaLabel="Two"
             isDarkMode={isDarkMode}
+            gridArea="two"
           />
           <Key
             label="3"
@@ -281,6 +304,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="number"
             ariaLabel="Three"
             isDarkMode={isDarkMode}
+            gridArea="three"
           />
           <Key
             label="+"
@@ -289,11 +313,10 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="default"
             ariaLabel="Add"
             isDarkMode={isDarkMode}
+            gridArea="add"
           />
-        </div>
 
-        {/* Row 6: ±, 0, ., = */}
-        <div className="grid grid-cols-4 gap-0.5 sm:gap-1">
+          {/* Row 6: ±, 0 (span 2), ., = (span 2 rows) */}
           <Key
             label="⁺⁄₋"
             value="±"
@@ -301,6 +324,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="default"
             ariaLabel="Negate"
             isDarkMode={isDarkMode}
+            gridArea="negate"
           />
           <Key
             label="0"
@@ -309,6 +333,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="number"
             ariaLabel="Zero"
             isDarkMode={isDarkMode}
+            gridArea="zero-zero"
           />
           <Key
             label="."
@@ -317,6 +342,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="number"
             ariaLabel="Decimal"
             isDarkMode={isDarkMode}
+            gridArea="decimal"
           />
           <Key
             label="="
@@ -325,6 +351,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
             variant="equals"
             ariaLabel="Equals"
             isDarkMode={isDarkMode}
+            gridArea="equals"
           />
         </div>
       </div>
