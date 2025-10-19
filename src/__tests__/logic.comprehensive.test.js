@@ -216,10 +216,8 @@ describe("Calculator State Machine", () => {
       history: [],
       memory: [],
       lastResult: null,
+      operationSequence: [],
       originalValue: null,
-      reciprocalCount: 0,
-      sqrtCount: 0,
-      squareCount: 0,
     });
   });
 
@@ -436,5 +434,62 @@ describe("Calculator State Machine", () => {
       actions.sqrt() // sqrt of negative number should cause error
     );
     expect(state.error).toBeDefined();
+  });
+
+  test("handles nested operations in correct order - sqrt then sqr", () => {
+    let state = initialState;
+
+    // Input 9
+    state = calculatorReducer(state, actions.inputDigit("9"));
+
+    // Apply sqrt first
+    state = calculatorReducer(state, actions.sqrt());
+    expect(state.expression).toBe("√(9)");
+    expect(state.currentInput).toBe("3");
+
+    // Apply sqr second
+    state = calculatorReducer(state, actions.square());
+    expect(state.expression).toBe("sqr(√(9))");
+    expect(state.currentInput).toBe("9");
+  });
+
+  test("handles nested operations in correct order - sqr then sqrt", () => {
+    let state = initialState;
+
+    // Input 4
+    state = calculatorReducer(state, actions.inputDigit("4"));
+
+    // Apply sqr first
+    state = calculatorReducer(state, actions.square());
+    expect(state.expression).toBe("sqr(4)");
+    expect(state.currentInput).toBe("16");
+
+    // Apply sqrt second
+    state = calculatorReducer(state, actions.sqrt());
+    expect(state.expression).toBe("√(sqr(4))");
+    expect(state.currentInput).toBe("4");
+  });
+
+  test("handles multiple alternating operations", () => {
+    let state = initialState;
+
+    // Input 16
+    state = calculatorReducer(state, actions.inputDigit("1"));
+    state = calculatorReducer(state, actions.inputDigit("6"));
+
+    // sqrt(16) = 4
+    state = calculatorReducer(state, actions.sqrt());
+    expect(state.expression).toBe("√(16)");
+    expect(state.currentInput).toBe("4");
+
+    // sqr(sqrt(16)) = sqr(4) = 16
+    state = calculatorReducer(state, actions.square());
+    expect(state.expression).toBe("sqr(√(16))");
+    expect(state.currentInput).toBe("16");
+
+    // sqrt(sqr(sqrt(16))) = sqrt(16) = 4
+    state = calculatorReducer(state, actions.sqrt());
+    expect(state.expression).toBe("√(sqr(√(16)))");
+    expect(state.currentInput).toBe("4");
   });
 });

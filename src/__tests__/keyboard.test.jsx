@@ -10,7 +10,7 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("123");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("123");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("123");
   });
 
   test("handles operation key input", async () => {
@@ -20,7 +20,7 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("5+3=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("8");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("8");
   });
 
   test("handles decimal input", async () => {
@@ -30,7 +30,7 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("12.34");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("12.34");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("12.34");
   });
 
   test("handles backspace key", async () => {
@@ -41,7 +41,7 @@ describe("Keyboard Interactions", () => {
       await user.keyboard("123");
       await user.keyboard("{Backspace}");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("12");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("12");
   });
 
   test("handles Enter key for equals", async () => {
@@ -52,7 +52,7 @@ describe("Keyboard Interactions", () => {
       await user.keyboard("5+3");
       await user.keyboard("{Enter}");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("8");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("8");
   });
 
   test("handles Escape key for clear", async () => {
@@ -63,7 +63,7 @@ describe("Keyboard Interactions", () => {
       await user.keyboard("123");
       await user.keyboard("{Escape}");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("0");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("0");
   });
 
   test("handles Delete key for clear entry", async () => {
@@ -74,7 +74,7 @@ describe("Keyboard Interactions", () => {
       await user.keyboard("123");
       await user.keyboard("{Delete}");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("0");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("0");
   });
 
   test("handles arithmetic operators", async () => {
@@ -85,28 +85,28 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("5+3=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("8");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("8");
 
     // Subtraction
     await act(async () => {
       await user.keyboard("{Escape}");
       await user.keyboard("10-3=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("7");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("7");
 
     // Multiplication
     await act(async () => {
       await user.keyboard("{Escape}");
       await user.keyboard("4*3=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("12");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("12");
 
     // Division
     await act(async () => {
       await user.keyboard("{Escape}");
       await user.keyboard("15/3=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("5");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("5");
   });
 
   test("handles scientific functions", async () => {
@@ -118,7 +118,7 @@ describe("Keyboard Interactions", () => {
       await user.keyboard("9");
       await user.keyboard("s"); // sqrt
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("3");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("3");
 
     // Square
     await act(async () => {
@@ -126,7 +126,7 @@ describe("Keyboard Interactions", () => {
       await user.keyboard("4");
       await user.keyboard("x"); // square
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("16");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("16");
   });
 
   test("handles percentage calculations", async () => {
@@ -137,7 +137,7 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("50+10%=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("55");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("55");
   });
 
   test("handles negative numbers", async () => {
@@ -148,7 +148,7 @@ describe("Keyboard Interactions", () => {
       await user.keyboard("5");
       await user.keyboard("n"); // negate
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("-5");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("-5");
   });
 
   test("handles memory operations with keyboard shortcuts", async () => {
@@ -170,7 +170,7 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("{Control>}r{/Control}");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("42");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("42");
   });
 
   test("handles complex keyboard sequences", async () => {
@@ -181,7 +181,7 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("(2+3)*4=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("20");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("20");
   });
 
   test("handles continuous calculations", async () => {
@@ -192,13 +192,13 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("5+3=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("8");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("8");
 
     // Continue with result
     await act(async () => {
       await user.keyboard("*2=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("16");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("16");
   });
 
   test("handles keyboard navigation", async () => {
@@ -227,7 +227,7 @@ describe("Keyboard Interactions", () => {
     });
 
     // Theme should toggle (this would depend on implementation)
-    expect(screen.getByLabelText(/toggle theme/i)).toBeInTheDocument();
+    expect(screen.getAllByLabelText(/toggle theme/i)[0]).toBeInTheDocument();
   });
 
   test("handles keyboard shortcuts for history toggle", async () => {
@@ -240,7 +240,7 @@ describe("Keyboard Interactions", () => {
     });
 
     // History panel should be visible
-    expect(screen.getByText("History")).toBeInTheDocument();
+    expect(screen.getAllByText("History")[0]).toBeInTheDocument();
   });
 
   test("handles rapid key presses", async () => {
@@ -251,7 +251,9 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("1234567890");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("1,234,567,890");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent(
+      "1,234,567,890"
+    );
   });
 
   test("handles mixed keyboard and mouse input", async () => {
@@ -265,11 +267,11 @@ describe("Keyboard Interactions", () => {
 
     // Continue with mouse
     await act(async () => {
-      await user.click(screen.getByLabelText("Three"));
-      await user.click(screen.getByLabelText("Equals"));
+      await user.click(screen.getAllByLabelText("Three")[0]);
+      await user.click(screen.getAllByLabelText("Equals")[0]);
     });
 
-    expect(screen.getByLabelText("Display")).toHaveTextContent("8");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("8");
   });
 
   test("handles keyboard input with error states", async () => {
@@ -280,7 +282,7 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("5/0=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent(
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent(
       /Cannot divide by zero|Error/i
     );
 
@@ -289,7 +291,7 @@ describe("Keyboard Interactions", () => {
       await user.keyboard("{Escape}");
       await user.keyboard("2+2=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("4");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("4");
   });
 
   test("handles keyboard input with decimal precision", async () => {
@@ -299,7 +301,7 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("0.1+0.2=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("0.3");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("0.3");
   });
 
   test("handles keyboard input with large numbers", async () => {
@@ -309,7 +311,9 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("999999999+1=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("1,000,000,000");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent(
+      "1,000,000,000"
+    );
   });
 
   test("handles keyboard input with scientific notation", async () => {
@@ -319,6 +323,6 @@ describe("Keyboard Interactions", () => {
     await act(async () => {
       await user.keyboard("100+10=");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("110");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("110");
   });
 });

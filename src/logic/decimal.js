@@ -23,7 +23,26 @@ export function stripTrailingZeros(numStr) {
 }
 
 /**
- * Formats a number for display with thousand separators
+ * Truncates a string to a maximum length while preserving decimal point
+ */
+function truncateDisplayString(str, maxLength) {
+  if (str.length <= maxLength) return str;
+
+  // If it has a decimal point, try to preserve it
+  if (str.includes(".")) {
+    const decimalIndex = str.indexOf(".");
+    if (decimalIndex < maxLength) {
+      return str.substring(0, maxLength);
+    }
+  }
+
+  return str.substring(0, maxLength);
+}
+
+/**
+ * Formats a number for display with character limit
+ * - For numbers starting with 0. (like 0.123...): max 17 characters
+ * - For normal numbers: max 16 characters
  */
 export function formatDisplay(value) {
   if (value === "" || value === null || value === undefined) return "0";
@@ -46,13 +65,19 @@ export function formatDisplay(value) {
 
   if (!isFinite(num)) return numStr;
 
+  // Determine character limit based on original number format
+  const originalStartsWithZero =
+    numStr.startsWith("0.") || numStr.startsWith("-0.");
+  const maxLength = originalStartsWithZero ? 17 : 16;
+
   // For very large or small numbers, use exponential notation
   if (Math.abs(num) >= 1e15 || (Math.abs(num) < 1e-6 && num !== 0)) {
-    return num.toExponential(11);
+    const exponential = num.toExponential(11);
+    return exponential;
   }
 
-  // Round and format
-  const rounded = roundToSignificantDigits(num);
+  // Round and format with more significant digits for display
+  const rounded = roundToSignificantDigits(num, 15);
   const cleaned = stripTrailingZeros(rounded.toString());
 
   // Add thousand separators
@@ -61,11 +86,15 @@ export function formatDisplay(value) {
     parseInt(parts[0]) || 0
   );
 
+  let result;
   if (parts.length > 1) {
-    return `${integerPart}.${parts[1]}`;
+    result = `${integerPart}.${parts[1]}`;
+  } else {
+    result = integerPart;
   }
 
-  return integerPart;
+  // Apply character limit based on number type
+  return truncateDisplayString(result, maxLength);
 }
 
 /**

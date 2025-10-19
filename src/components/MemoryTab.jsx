@@ -56,14 +56,16 @@ const MemoryItem = memo(
 
     return (
       <div className={theme.memoryItem}>
-        <button
-          onClick={handleLoadClick}
-          className={theme.valueButton}
-          aria-label={`Load memory value ${item.value}`}
-        >
-          <div className={`font-semibold ${theme.value}`}>
-            {formatDisplay(item.value)}
-          </div>
+        <div className={theme.valueButton}>
+          <button
+            onClick={handleLoadClick}
+            className="w-full text-left"
+            aria-label={`Load memory value ${item.value}`}
+          >
+            <div className={`font-semibold ${theme.value}`}>
+              {formatDisplay(item.value)}
+            </div>
+          </button>
 
           <div className="flex gap-1 sm:gap-2 mt-1 sm:mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
             <ControlButton
@@ -85,7 +87,7 @@ const MemoryItem = memo(
               themeClasses={theme.controlButton}
             />
           </div>
-        </button>
+        </div>
       </div>
     );
   }

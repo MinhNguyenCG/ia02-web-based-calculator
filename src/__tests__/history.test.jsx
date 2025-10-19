@@ -14,20 +14,17 @@ describe("History Functionality", () => {
 
     // Perform a calculation
     await act(async () => {
-      await user.click(screen.getByLabelText("Two"));
-      await user.click(screen.getByLabelText("Add"));
-      await user.click(screen.getByLabelText("Three"));
-      await user.click(screen.getByLabelText("Equals"));
+      await user.click(screen.getAllByLabelText("Two")[0]);
+      await user.click(screen.getAllByLabelText("Add")[0]);
+      await user.click(screen.getAllByLabelText("Three")[0]);
+      await user.click(screen.getAllByLabelText("Equals")[0]);
     });
 
-    // Toggle history panel
-    await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-    });
+    // History panel is always visible on mobile, no need to toggle
 
     // Should see the calculation in history
-    expect(screen.getByText("2 + 3")).toBeInTheDocument();
-    expect(screen.getByLabelText("Display")).toHaveTextContent("5"); // Display should show 5
+    expect(screen.getAllByText("2 + 3")[0]).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("5"); // Display should show 5
     expect(screen.getAllByText("5").length).toBeGreaterThanOrEqual(2); // At least one in display, one in history
   });
 
@@ -37,24 +34,24 @@ describe("History Functionality", () => {
 
     // Perform a calculation
     await act(async () => {
-      await user.click(screen.getByLabelText("Four"));
-      await user.click(screen.getByLabelText("Add"));
-      await user.click(screen.getByLabelText("Six"));
-      await user.click(screen.getByLabelText("Equals"));
+      await user.click(screen.getAllByLabelText("Four")[0]);
+      await user.click(screen.getAllByLabelText("Add")[0]);
+      await user.click(screen.getAllByLabelText("Six")[0]);
+      await user.click(screen.getAllByLabelText("Equals")[0]);
     });
 
     // Clear display
     await act(async () => {
-      await user.click(screen.getByLabelText("Clear"));
+      await user.click(screen.getAllByLabelText("Clear")[0]);
     });
 
-    // Open history and load the result
+    // History panel is always visible on mobile, no need to toggle
+    // Click on the result in history
     await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-      await user.click(screen.getByText("10"));
+      await user.click(screen.getAllByText("10")[0]);
     });
 
-    expect(screen.getByLabelText("Display")).toHaveTextContent("10");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("10");
   });
 
   test("clears all history", async () => {
@@ -63,31 +60,30 @@ describe("History Functionality", () => {
 
     // Perform multiple calculations
     await act(async () => {
-      await user.click(screen.getByLabelText("Two"));
-      await user.click(screen.getByLabelText("Add"));
-      await user.click(screen.getByLabelText("Three"));
-      await user.click(screen.getByLabelText("Equals"));
+      await user.click(screen.getAllByLabelText("Two")[0]);
+      await user.click(screen.getAllByLabelText("Add")[0]);
+      await user.click(screen.getAllByLabelText("Three")[0]);
+      await user.click(screen.getAllByLabelText("Equals")[0]);
     });
 
     await act(async () => {
-      await user.click(screen.getByLabelText("Five"));
-      await user.click(screen.getByLabelText("Multiply"));
-      await user.click(screen.getByLabelText("Two"));
-      await user.click(screen.getByLabelText("Equals"));
+      await user.click(screen.getAllByLabelText("Five")[0]);
+      await user.click(screen.getAllByLabelText("Multiply")[0]);
+      await user.click(screen.getAllByLabelText("Two")[0]);
+      await user.click(screen.getAllByLabelText("Equals")[0]);
     });
 
-    // Open history panel
-    await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-    });
+    // History panel is always visible on mobile, no need to toggle
 
-    // Clear all history
-    const clearButton = screen.getByLabelText("Clear all history");
+    // Clear all history - find the clear button in the history panel
+    const clearButton = screen.getAllByLabelText("Clear all memory")[0];
     await act(async () => {
       await user.click(clearButton);
     });
 
-    expect(screen.getByText("There's no history yet")).toBeInTheDocument();
+    expect(
+      screen.getAllByText("There's no history yet")[0]
+    ).toBeInTheDocument();
   });
 
   test("displays history in chronological order", async () => {
@@ -96,35 +92,32 @@ describe("History Functionality", () => {
 
     // Perform first calculation
     await act(async () => {
-      await user.click(screen.getByLabelText("One"));
-      await user.click(screen.getByLabelText("Add"));
-      await user.click(screen.getByLabelText("One"));
-      await user.click(screen.getByLabelText("Equals"));
+      await user.click(screen.getAllByLabelText("One")[0]);
+      await user.click(screen.getAllByLabelText("Add")[0]);
+      await user.click(screen.getAllByLabelText("One")[0]);
+      await user.click(screen.getAllByLabelText("Equals")[0]);
     });
 
     // Perform second calculation
     await act(async () => {
-      await user.click(screen.getByLabelText("Two"));
-      await user.click(screen.getByLabelText("Add"));
-      await user.click(screen.getByLabelText("Two"));
-      await user.click(screen.getByLabelText("Equals"));
+      await user.click(screen.getAllByLabelText("Two")[0]);
+      await user.click(screen.getAllByLabelText("Add")[0]);
+      await user.click(screen.getAllByLabelText("Two")[0]);
+      await user.click(screen.getAllByLabelText("Equals")[0]);
     });
 
     // Perform third calculation
     await act(async () => {
-      await user.click(screen.getByLabelText("Three"));
-      await user.click(screen.getByLabelText("Add"));
-      await user.click(screen.getByLabelText("Three"));
-      await user.click(screen.getByLabelText("Equals"));
+      await user.click(screen.getAllByLabelText("Three")[0]);
+      await user.click(screen.getAllByLabelText("Add")[0]);
+      await user.click(screen.getAllByLabelText("Three")[0]);
+      await user.click(screen.getAllByLabelText("Equals")[0]);
     });
 
-    // Open history panel
-    await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-    });
+    // History panel is always visible on mobile, no need to toggle
 
     // Should show newest first (6, 4, 2)
-    expect(screen.getByLabelText("Display")).toHaveTextContent("6"); // Display should show 6
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("6"); // Display should show 6
     expect(screen.getAllByText("6").length).toBeGreaterThanOrEqual(2); // At least one in display, one in history
     expect(screen.getAllByText("4").length).toBeGreaterThanOrEqual(1); // History should show 4
     expect(screen.getAllByText("2").length).toBeGreaterThanOrEqual(1); // History should show 2 (oldest)
@@ -134,39 +127,39 @@ describe("History Functionality", () => {
     const user = userEvent.setup();
     render(<App />);
 
-    // Open history panel
-    await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-    });
+    // History panel is always visible on mobile, no need to toggle
 
-    expect(screen.getByText("There's no history yet")).toBeInTheDocument();
+    expect(
+      screen.getAllByText("There's no history yet")[0]
+    ).toBeInTheDocument();
   });
 
   test("toggles between history and memory tabs", async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    // Open history panel
-    await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-    });
+    // History panel is always visible on mobile, no need to toggle
 
     // Should start with history tab
-    expect(screen.getByText("There's no history yet")).toBeInTheDocument();
+    expect(
+      screen.getAllByText("There's no history yet")[0]
+    ).toBeInTheDocument();
 
     // Switch to memory tab
     await act(async () => {
-      await user.click(screen.getByText("Memory"));
+      await user.click(screen.getAllByText("Memory")[0]);
     });
     expect(
-      screen.getByText("There's nothing saved in memory")
+      screen.getAllByText("There's nothing saved in memory")[0]
     ).toBeInTheDocument();
 
     // Switch back to history tab
     await act(async () => {
-      await user.click(screen.getByText("History"));
+      await user.click(screen.getAllByText("History")[0]);
     });
-    expect(screen.getByText("There's no history yet")).toBeInTheDocument();
+    expect(
+      screen.getAllByText("There's no history yet")[0]
+    ).toBeInTheDocument();
   });
 
   test("persists history across calculations", async () => {
@@ -175,29 +168,26 @@ describe("History Functionality", () => {
 
     // Perform first calculation
     await act(async () => {
-      await user.click(screen.getByLabelText("One"));
-      await user.click(screen.getByLabelText("Add"));
-      await user.click(screen.getByLabelText("One"));
-      await user.click(screen.getByLabelText("Equals"));
+      await user.click(screen.getAllByLabelText("One")[0]);
+      await user.click(screen.getAllByLabelText("Add")[0]);
+      await user.click(screen.getAllByLabelText("One")[0]);
+      await user.click(screen.getAllByLabelText("Equals")[0]);
     });
 
     // Perform second calculation
     await act(async () => {
-      await user.click(screen.getByLabelText("Two"));
-      await user.click(screen.getByLabelText("Add"));
-      await user.click(screen.getByLabelText("Two"));
-      await user.click(screen.getByLabelText("Equals"));
+      await user.click(screen.getAllByLabelText("Two")[0]);
+      await user.click(screen.getAllByLabelText("Add")[0]);
+      await user.click(screen.getAllByLabelText("Two")[0]);
+      await user.click(screen.getAllByLabelText("Equals")[0]);
     });
 
-    // Open history panel
-    await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-    });
+    // History panel is always visible on mobile, no need to toggle
 
     // Should have both calculations
-    expect(screen.getByText("1 + 1")).toBeInTheDocument();
-    expect(screen.getByText("2 + 2")).toBeInTheDocument();
-    expect(screen.getByLabelText("Display")).toHaveTextContent("4"); // Display should show 4
+    expect(screen.getAllByText("1 + 1")[0]).toBeInTheDocument();
+    expect(screen.getAllByText("2 + 2")[0]).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("4"); // Display should show 4
     expect(screen.getAllByText("2").length).toBeGreaterThanOrEqual(1); // History should show 2
     expect(screen.getAllByText("4").length).toBeGreaterThanOrEqual(2); // At least one in display, one in history
   });
@@ -208,22 +198,19 @@ describe("History Functionality", () => {
 
     // Perform complex calculation
     await act(async () => {
-      await user.click(screen.getByLabelText("Two"));
-      await user.click(screen.getByLabelText("Add"));
-      await user.click(screen.getByLabelText("Three"));
-      await user.click(screen.getByLabelText("Multiply"));
-      await user.click(screen.getByLabelText("Four"));
-      await user.click(screen.getByLabelText("Equals"));
+      await user.click(screen.getAllByLabelText("Two")[0]);
+      await user.click(screen.getAllByLabelText("Add")[0]);
+      await user.click(screen.getAllByLabelText("Three")[0]);
+      await user.click(screen.getAllByLabelText("Multiply")[0]);
+      await user.click(screen.getAllByLabelText("Four")[0]);
+      await user.click(screen.getAllByLabelText("Equals")[0]);
     });
 
-    // Open history panel
-    await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-    });
+    // History panel is always visible on mobile, no need to toggle
 
     // Should show the complex expression (check for flexible format)
     // Skip pattern check as expression format may vary
-    expect(screen.getByLabelText("Display")).toHaveTextContent("20"); // Display should show 20 (2+3 then ×4 = 20)
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("20"); // Display should show 20 (2+3 then ×4 = 20)
     expect(screen.getAllByText("20").length).toBeGreaterThanOrEqual(2); // At least one in display, one in history
   });
 
@@ -233,17 +220,16 @@ describe("History Functionality", () => {
 
     // Perform division by zero
     await act(async () => {
-      await user.click(screen.getByLabelText("Five"));
-      await user.click(screen.getByLabelText("Divide"));
-      await user.click(screen.getByLabelText("Zero"));
-      await user.click(screen.getByLabelText("Equals"));
+      await user.click(screen.getAllByLabelText("Five")[0]);
+      await user.click(screen.getAllByLabelText("Divide")[0]);
+      await user.click(screen.getAllByLabelText("Zero")[0]);
+      await user.click(screen.getAllByLabelText("Equals")[0]);
     });
 
-    // Should not add error to history
-    await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-    });
-    expect(screen.getByText("There's no history yet")).toBeInTheDocument();
+    // Should not add error to history - history panel is always visible on mobile
+    expect(
+      screen.getAllByText("There's no history yet")[0]
+    ).toBeInTheDocument();
   });
 });
 

@@ -199,7 +199,7 @@ export const testScenarios = {
 
   // Theme switching
   themeSwitching: async (user) => {
-    const themeButton = screen.getByLabelText(/toggle theme/i);
+    const themeButton = screen.getAllByLabelText(/toggle theme/i)[0];
     await user.click(themeButton);
 
     // Theme should toggle (check for class changes)

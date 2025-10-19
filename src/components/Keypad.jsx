@@ -65,7 +65,7 @@ export default function Keypad({ onAction, isDarkMode = true }) {
 
   return (
     <div
-      className={`p-3 sm:p-4 lg:p-10  backdrop-blur-sm transition-all duration-300 h-full flex flex-col ${
+      className={`p-1 sm:p-2 lg:p-3 backdrop-blur-sm transition-all duration-300 h-full flex flex-col ${
         isDarkMode
           ? "bg-gradient-to-br from-slate-800/50 to-slate-900/50"
           : "bg-gradient-to-br from-gray-100/50 to-gray-200/50"

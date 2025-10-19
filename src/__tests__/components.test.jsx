@@ -12,31 +12,33 @@ import MemoryButton from "../components/MemoryButton";
 describe("Display Component", () => {
   test("renders with initial value", () => {
     render(<Display currentInput="0" />);
-    expect(screen.getByLabelText("Display")).toHaveTextContent("0");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("0");
   });
 
   test("displays expression and current input", () => {
     render(<Display expression="2 + 3" currentInput="5" />);
-    expect(screen.getByLabelText("Expression")).toHaveTextContent("2 + 3");
-    expect(screen.getByLabelText("Display")).toHaveTextContent("5");
+    expect(screen.getAllByLabelText("Expression")[0]).toHaveTextContent(
+      "2 + 3"
+    );
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("5");
   });
 
   test("displays error message", () => {
     render(<Display error="Cannot divide by zero" />);
-    expect(screen.getByLabelText("Display")).toHaveTextContent(
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent(
       "Cannot divide by zero"
     );
   });
 
   test("handles dark mode styling", () => {
     render(<Display currentInput="123" isDarkMode={true} />);
-    const display = screen.getByLabelText("Display");
+    const display = screen.getAllByLabelText("Display")[0];
     expect(display).toHaveClass("text-white");
   });
 
   test("handles light mode styling", () => {
     render(<Display currentInput="123" isDarkMode={false} />);
-    const display = screen.getByLabelText("Display");
+    const display = screen.getAllByLabelText("Display")[0];
     expect(display).toHaveClass("text-gray-900");
   });
 });
@@ -59,7 +61,7 @@ describe("Key Component", () => {
       />
     );
 
-    const button = screen.getByLabelText("Five");
+    const button = screen.getAllByLabelText("Five")[0];
     expect(button).toHaveTextContent("5");
     expect(button).toHaveClass("calc-key");
   });
@@ -76,7 +78,9 @@ describe("Key Component", () => {
       />
     );
 
-    await user.click(screen.getByLabelText("Five"));
+    await act(async () => {
+      await user.click(screen.getAllByLabelText("Five")[0]);
+    });
     expect(mockOnClick).toHaveBeenCalledWith("5");
   });
 
@@ -91,7 +95,7 @@ describe("Key Component", () => {
       />
     );
 
-    const button = screen.getByLabelText("Equals");
+    const button = screen.getAllByLabelText("Equals")[0];
     expect(button).toHaveClass("calc-key");
   });
 
@@ -107,9 +111,11 @@ describe("Key Component", () => {
       />
     );
 
-    const button = screen.getByLabelText("Five");
+    const button = screen.getAllByLabelText("Five")[0];
     button.focus();
-    await user.keyboard("{Enter}");
+    await act(async () => {
+      await user.keyboard("{Enter}");
+    });
 
     expect(mockOnClick).toHaveBeenCalledWith("5");
   });
@@ -127,7 +133,7 @@ describe("Keypad Component", () => {
 
     for (let i = 0; i <= 9; i++) {
       expect(
-        screen.getByLabelText(
+        screen.getAllByLabelText(
           i === 0
             ? "Zero"
             : `${
@@ -149,7 +155,7 @@ describe("Keypad Component", () => {
                   ? "Eight"
                   : "Nine"
               }`
-        )
+        )[0]
       ).toBeInTheDocument();
     }
   });
@@ -157,28 +163,30 @@ describe("Keypad Component", () => {
   test("renders operation keys", () => {
     render(<Keypad onAction={mockOnAction} />);
 
-    expect(screen.getByLabelText("Add")).toBeInTheDocument();
-    expect(screen.getByLabelText("Subtract")).toBeInTheDocument();
-    expect(screen.getByLabelText("Multiply")).toBeInTheDocument();
-    expect(screen.getByLabelText("Divide")).toBeInTheDocument();
-    expect(screen.getByLabelText("Equals")).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Add")[0]).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Subtract")[0]).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Multiply")[0]).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Divide")[0]).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Equals")[0]).toBeInTheDocument();
   });
 
   test("renders function keys", () => {
     render(<Keypad onAction={mockOnAction} />);
 
-    expect(screen.getByLabelText("Clear")).toBeInTheDocument();
-    expect(screen.getByLabelText("Clear Entry")).toBeInTheDocument();
-    expect(screen.getByLabelText("Backspace")).toBeInTheDocument();
-    expect(screen.getByLabelText("Square root")).toBeInTheDocument();
-    expect(screen.getByLabelText("Square")).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Clear")[0]).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Clear Entry")[0]).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Backspace")[0]).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Square root")[0]).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Square")[0]).toBeInTheDocument();
   });
 
   test("handles digit input", async () => {
     const user = userEvent.setup();
     render(<Keypad onAction={mockOnAction} />);
 
-    await user.click(screen.getByLabelText("Five"));
+    await act(async () => {
+      await user.click(screen.getAllByLabelText("Five")[0]);
+    });
     expect(mockOnAction).toHaveBeenCalledWith(
       expect.objectContaining({
         type: "INPUT_DIGIT",
@@ -191,7 +199,9 @@ describe("Keypad Component", () => {
     const user = userEvent.setup();
     render(<Keypad onAction={mockOnAction} />);
 
-    await user.click(screen.getByLabelText("Add"));
+    await act(async () => {
+      await user.click(screen.getAllByLabelText("Add")[0]);
+    });
     expect(mockOnAction).toHaveBeenCalledWith(
       expect.objectContaining({
         type: "OPERATOR",
@@ -204,14 +214,18 @@ describe("Keypad Component", () => {
     const user = userEvent.setup();
     render(<Keypad onAction={mockOnAction} />);
 
-    await user.click(screen.getByLabelText("Clear"));
+    await act(async () => {
+      await user.click(screen.getAllByLabelText("Clear")[0]);
+    });
     expect(mockOnAction).toHaveBeenCalledWith(
       expect.objectContaining({
         type: "CLEAR_ALL",
       })
     );
 
-    await user.click(screen.getByLabelText("Clear Entry"));
+    await act(async () => {
+      await user.click(screen.getAllByLabelText("Clear Entry")[0]);
+    });
     expect(mockOnAction).toHaveBeenCalledWith(
       expect.objectContaining({
         type: "CLEAR_ENTRY",
@@ -248,11 +262,11 @@ describe("Header Component", () => {
       />
     );
 
-    const themeButton = screen.getByLabelText(/toggle theme/i);
+    const themeButton = screen.getAllByLabelText(/toggle theme/i)[0];
     expect(themeButton).toBeInTheDocument();
   });
 
-  test("renders history toggle button", () => {
+  test("renders menu button", () => {
     render(
       <Header
         onToggleTheme={mockOnToggleTheme}
@@ -260,11 +274,11 @@ describe("Header Component", () => {
       />
     );
 
-    const historyButton = screen.getByLabelText(/toggle history/i);
-    expect(historyButton).toBeInTheDocument();
+    const menuButton = screen.getAllByLabelText(/menu/i)[0];
+    expect(menuButton).toBeInTheDocument();
   });
 
-  test("calls toggle functions when buttons clicked", async () => {
+  test("calls toggle theme when theme button clicked", async () => {
     const user = userEvent.setup();
     render(
       <Header
@@ -273,11 +287,10 @@ describe("Header Component", () => {
       />
     );
 
-    await user.click(screen.getByLabelText(/toggle theme/i));
+    await act(async () => {
+      await user.click(screen.getAllByLabelText(/toggle theme/i)[0]);
+    });
     expect(mockOnToggleTheme).toHaveBeenCalled();
-
-    await user.click(screen.getByLabelText(/toggle history/i));
-    expect(mockOnToggleHistory).toHaveBeenCalled();
   });
 });
 
@@ -298,7 +311,7 @@ describe("MemoryButton Component", () => {
       />
     );
 
-    expect(screen.getByLabelText("Clear All Memory")).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Clear All Memory")[0]).toBeInTheDocument();
   });
 
   test("calls onClick when clicked", async () => {
@@ -312,7 +325,9 @@ describe("MemoryButton Component", () => {
       />
     );
 
-    await user.click(screen.getByLabelText("Clear All Memory"));
+    await act(async () => {
+      await user.click(screen.getAllByLabelText("Clear All Memory")[0]);
+    });
     expect(mockOnClick).toHaveBeenCalledWith("MC");
   });
 
@@ -327,8 +342,10 @@ describe("MemoryButton Component", () => {
       />
     );
 
-    const button = screen.getByLabelText("Clear All Memory");
-    await user.hover(button);
+    const button = screen.getAllByLabelText("Clear All Memory")[0];
+    await act(async () => {
+      await user.hover(button);
+    });
 
     expect(screen.getByText("Clear All Memory")).toBeInTheDocument();
   });
@@ -394,7 +411,9 @@ describe("HistoryTab Component", () => {
       />
     );
 
-    await user.click(screen.getByText("5"));
+    await act(async () => {
+      await user.click(screen.getByText("5"));
+    });
     expect(mockOnLoadHistory).toHaveBeenCalledWith(5);
   });
 
@@ -416,7 +435,9 @@ describe("HistoryTab Component", () => {
       />
     );
 
-    await user.click(screen.getByLabelText("Clear all history"));
+    await act(async () => {
+      await user.click(screen.getAllByLabelText("Clear all memory")[0]);
+    });
     expect(mockOnClearHistory).toHaveBeenCalled();
   });
 });
@@ -497,7 +518,9 @@ describe("MemoryTab Component", () => {
       />
     );
 
-    await user.click(screen.getByText("42"));
+    await act(async () => {
+      await user.click(screen.getByText("42"));
+    });
     expect(mockOnLoadMemory).toHaveBeenCalledWith(42);
   });
 });
@@ -562,7 +585,9 @@ describe("SidePanel Component", () => {
       />
     );
 
-    await user.click(screen.getByText("Memory"));
+    await act(async () => {
+      await user.click(screen.getByText("Memory"));
+    });
     expect(mockOnTabChange).toHaveBeenCalledWith("memory");
   });
 

@@ -18,7 +18,7 @@ describe("Accessibility", () => {
   test("display has proper ARIA attributes", () => {
     render(<App />);
 
-    const display = screen.getByLabelText("Display");
+    const display = screen.getAllByLabelText("Display")[0];
     expect(display).toHaveAttribute("role", "status");
     expect(display).toHaveAttribute("aria-live", "polite");
   });
@@ -27,7 +27,7 @@ describe("Accessibility", () => {
     const user = userEvent.setup();
     render(<App />);
 
-    const button5 = screen.getByLabelText("Five");
+    const button5 = screen.getAllByLabelText("Five")[0];
     button5.focus();
 
     expect(button5).toHaveFocus();
@@ -45,7 +45,7 @@ describe("Accessibility", () => {
     await act(async () => {
       await user.keyboard("5");
     });
-    expect(screen.getByLabelText("Display")).toHaveTextContent("5");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("5");
 
     await act(async () => {
       await user.keyboard("+");
@@ -53,7 +53,7 @@ describe("Accessibility", () => {
       await user.keyboard("{Enter}");
     });
 
-    expect(screen.getByLabelText("Display")).toHaveTextContent("8");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("8");
   });
 
   test("Escape key clears calculator", async () => {
@@ -65,6 +65,6 @@ describe("Accessibility", () => {
       await user.keyboard("{Escape}");
     });
 
-    expect(screen.getByLabelText("Display")).toHaveTextContent("0");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("0");
   });
 });

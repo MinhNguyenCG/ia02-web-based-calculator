@@ -14,22 +14,21 @@ describe("Memory Functionality", () => {
 
     // Input a value
     await act(async () => {
-      await user.click(screen.getByLabelText("Four"));
-      await user.click(screen.getByLabelText("Two"));
+      await user.click(screen.getAllByLabelText("Four")[0]);
+      await user.click(screen.getAllByLabelText("Two")[0]);
     });
 
     // Store in memory
     await act(async () => {
-      await user.click(screen.getByLabelText("Memory Store (Ctrl + M)"));
+      await user.click(screen.getAllByLabelText("Memory Store (Ctrl + M)")[0]);
     });
 
-    // Toggle history panel to see memory
+    // Memory panel is always visible on mobile, just switch to memory tab
     await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-      await user.click(screen.getByText("Memory"));
+      await user.click(screen.getAllByText("Memory")[0]);
     });
 
-    expect(screen.getAllByText("42")).toHaveLength(2);
+    expect(screen.getAllByText("42")).toHaveLength(4);
   });
 
   test("recalls value from memory", async () => {
@@ -38,21 +37,21 @@ describe("Memory Functionality", () => {
 
     // Store a value
     await act(async () => {
-      await user.click(screen.getByLabelText("Five"));
-      await user.click(screen.getByLabelText("Memory Store (Ctrl + M)"));
+      await user.click(screen.getAllByLabelText("Five")[0]);
+      await user.click(screen.getAllByLabelText("Memory Store (Ctrl + M)")[0]);
     });
 
     // Clear display
     await act(async () => {
-      await user.click(screen.getByLabelText("Clear"));
+      await user.click(screen.getAllByLabelText("Clear")[0]);
     });
 
     // Recall from memory
     await act(async () => {
-      await user.click(screen.getByLabelText("Memory Recall (Ctrl + R)"));
+      await user.click(screen.getAllByLabelText("Memory Recall (Ctrl + R)")[0]);
     });
 
-    expect(screen.getByLabelText("Display")).toHaveTextContent("5");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("5");
   });
 
   test("adds to memory", async () => {
@@ -61,23 +60,23 @@ describe("Memory Functionality", () => {
 
     // Store initial value
     await act(async () => {
-      await user.click(screen.getByLabelText("One"));
-      await user.click(screen.getByLabelText("Memory Store (Ctrl + M)"));
+      await user.click(screen.getAllByLabelText("One")[0]);
+      await user.click(screen.getAllByLabelText("Memory Store (Ctrl + M)")[0]);
     });
 
     // Input new value and add to memory
     await act(async () => {
-      await user.click(screen.getByLabelText("Two"));
-      await user.click(screen.getByLabelText("Memory Add (Ctrl + P)"));
+      await user.click(screen.getAllByLabelText("Two")[0]);
+      await user.click(screen.getAllByLabelText("Memory Add (Ctrl + P)")[0]);
     });
 
     // Toggle to memory tab to verify
     await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-      await user.click(screen.getByText("Memory"));
+      // Memory panel is always visible on mobile
+      await user.click(screen.getAllByText("Memory")[0]);
     });
 
-    expect(screen.getByText("3")).toBeInTheDocument();
+    expect(screen.getAllByText("3")[0]).toBeInTheDocument();
   });
 
   test("subtracts from memory", async () => {
@@ -86,21 +85,23 @@ describe("Memory Functionality", () => {
 
     // Store initial value (10)
     await act(async () => {
-      await user.click(screen.getByLabelText("One"));
-      await user.click(screen.getByLabelText("Zero"));
-      await user.click(screen.getByLabelText("Memory Store (Ctrl + M)"));
+      await user.click(screen.getAllByLabelText("One")[0]);
+      await user.click(screen.getAllByLabelText("Zero")[0]);
+      await user.click(screen.getAllByLabelText("Memory Store (Ctrl + M)")[0]);
     });
 
     // Input new value and subtract from memory (10 - 3 = 7)
     await act(async () => {
-      await user.click(screen.getByLabelText("Three"));
-      await user.click(screen.getByLabelText("Memory Subtract (Ctrl + Q)"));
+      await user.click(screen.getAllByLabelText("Three")[0]);
+      await user.click(
+        screen.getAllByLabelText("Memory Subtract (Ctrl + Q)")[0]
+      );
     });
 
     // Toggle to memory tab to verify
     await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-      await user.click(screen.getByText("Memory"));
+      // Memory panel is always visible on mobile
+      await user.click(screen.getAllByText("Memory")[0]);
     });
 
     expect(screen.getAllByText("7").length).toBeGreaterThanOrEqual(1);
@@ -112,23 +113,25 @@ describe("Memory Functionality", () => {
 
     // Store some values
     await act(async () => {
-      await user.click(screen.getByLabelText("Five"));
-      await user.click(screen.getByLabelText("Memory Store (Ctrl + M)"));
+      await user.click(screen.getAllByLabelText("Five")[0]);
+      await user.click(screen.getAllByLabelText("Memory Store (Ctrl + M)")[0]);
     });
 
     // Clear all memory
     await act(async () => {
-      await user.click(screen.getByLabelText("Clear All Memory (Ctrl + L)"));
+      await user.click(
+        screen.getAllByLabelText("Clear All Memory (Ctrl + L)")[0]
+      );
     });
 
     // Toggle to memory tab to verify
     await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-      await user.click(screen.getByText("Memory"));
+      // Memory panel is always visible on mobile
+      await user.click(screen.getAllByText("Memory")[0]);
     });
 
     expect(
-      screen.getByText("There's nothing saved in memory")
+      screen.getAllByText("There's nothing saved in memory")[0]
     ).toBeInTheDocument();
   });
 
@@ -138,23 +141,23 @@ describe("Memory Functionality", () => {
 
     // Store a value
     await act(async () => {
-      await user.click(screen.getByLabelText("Seven"));
-      await user.click(screen.getByLabelText("Memory Store (Ctrl + M)"));
+      await user.click(screen.getAllByLabelText("Seven")[0]);
+      await user.click(screen.getAllByLabelText("Memory Store (Ctrl + M)")[0]);
     });
 
     // Clear display
     await act(async () => {
-      await user.click(screen.getByLabelText("Clear"));
+      await user.click(screen.getAllByLabelText("Clear")[0]);
     });
 
     // Open memory tab and load value
     await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-      await user.click(screen.getByText("Memory"));
-      await user.click(screen.getByText("1"));
+      // Memory panel is always visible on mobile
+      await user.click(screen.getAllByText("Memory")[0]);
+      await user.click(screen.getAllByText("1")[0]);
     });
 
-    expect(screen.getByLabelText("Display")).toHaveTextContent("1");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("1");
   });
 
   test("clears individual memory item", async () => {
@@ -163,19 +166,19 @@ describe("Memory Functionality", () => {
 
     // Store multiple values
     await act(async () => {
-      await user.click(screen.getByLabelText("Five"));
-      await user.click(screen.getByLabelText("Memory Store (Ctrl + M)"));
+      await user.click(screen.getAllByLabelText("Five")[0]);
+      await user.click(screen.getAllByLabelText("Memory Store (Ctrl + M)")[0]);
     });
 
     await act(async () => {
-      await user.click(screen.getByLabelText("One"));
-      await user.click(screen.getByLabelText("Memory Store (Ctrl + M)"));
+      await user.click(screen.getAllByLabelText("One")[0]);
+      await user.click(screen.getAllByLabelText("Memory Store (Ctrl + M)")[0]);
     });
 
     // Open memory tab and clear first item
     await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-      await user.click(screen.getByText("Memory"));
+      // Memory panel is always visible on mobile
+      await user.click(screen.getAllByText("Memory")[0]);
     });
 
     // Find and click the MC button for the first item
@@ -212,7 +215,7 @@ describe("Memory Functionality", () => {
       await user.keyboard("{Control>}r{/Control}");
     });
 
-    expect(screen.getByLabelText("Display")).toHaveTextContent("42");
+    expect(screen.getAllByLabelText("Display")[0]).toHaveTextContent("42");
   });
 
   test("shows memory tab when toggled", async () => {
@@ -221,16 +224,16 @@ describe("Memory Functionality", () => {
 
     // Toggle history panel
     await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
+      // Memory panel is always visible on mobile
     });
 
     // Switch to memory tab
     await act(async () => {
-      await user.click(screen.getByText("Memory"));
+      await user.click(screen.getAllByText("Memory")[0]);
     });
 
     expect(
-      screen.getByText("There's nothing saved in memory")
+      screen.getAllByText("There's nothing saved in memory")[0]
     ).toBeInTheDocument();
   });
 
@@ -240,24 +243,24 @@ describe("Memory Functionality", () => {
 
     // Store multiple values with small delay
     await act(async () => {
-      await user.click(screen.getByLabelText("One"));
-      await user.click(screen.getByLabelText("Memory Store (Ctrl + M)"));
+      await user.click(screen.getAllByLabelText("One")[0]);
+      await user.click(screen.getAllByLabelText("Memory Store (Ctrl + M)")[0]);
     });
 
     await act(async () => {
-      await user.click(screen.getByLabelText("Two"));
-      await user.click(screen.getByLabelText("Memory Store (Ctrl + M)"));
+      await user.click(screen.getAllByLabelText("Two")[0]);
+      await user.click(screen.getAllByLabelText("Memory Store (Ctrl + M)")[0]);
     });
 
     await act(async () => {
-      await user.click(screen.getByLabelText("Three"));
-      await user.click(screen.getByLabelText("Memory Store (Ctrl + M)"));
+      await user.click(screen.getAllByLabelText("Three")[0]);
+      await user.click(screen.getAllByLabelText("Memory Store (Ctrl + M)")[0]);
     });
 
     // Open memory tab
     await act(async () => {
-      await user.click(screen.getByLabelText(/toggle history/i));
-      await user.click(screen.getByText("Memory"));
+      // Memory panel is always visible on mobile
+      await user.click(screen.getAllByText("Memory")[0]);
     });
 
     // Should show newest first (3, 2, 1)

@@ -2,6 +2,29 @@ import { evaluate } from "./evaluator";
 import { calculatePercent } from "./percent";
 import { formatResult, formatDisplayNumber } from "./decimal";
 
+// Helper function to build nested expression from operation sequence
+function buildNestedExpression(originalValue, operationSequence) {
+  let expression = originalValue.toString();
+
+  // Apply operations in forward order (outermost first)
+  for (let i = 0; i < operationSequence.length; i++) {
+    const operation = operationSequence[i];
+    switch (operation) {
+      case "sqrt":
+        expression = `√(${expression})`;
+        break;
+      case "square":
+        expression = `sqr(${expression})`;
+        break;
+      case "reciprocal":
+        expression = `1/(${expression})`;
+        break;
+    }
+  }
+
+  return expression;
+}
+
 export const initialState = {
   currentInput: "0",
   expression: "",
@@ -9,9 +32,7 @@ export const initialState = {
   history: [],
   memory: [],
   lastResult: null,
-  sqrtCount: 0,
-  reciprocalCount: 0,
-  squareCount: 0,
+  operationSequence: [], // Track the sequence of operations applied
   originalValue: null,
 };
 
@@ -67,28 +88,20 @@ export function calculatorReducer(state, action) {
           ...state,
           currentInput: digit,
           lastResult: null,
-          sqrtCount: 0,
-          reciprocalCount: 0,
-          squareCount: 0,
+          operationSequence: [],
           originalValue: null,
         };
       }
 
       // Reset operation counts when new digits are entered
-      if (
-        state.sqrtCount > 0 ||
-        state.reciprocalCount > 0 ||
-        state.squareCount > 0
-      ) {
+      if (state.operationSequence.length > 0) {
         return {
           ...state,
           currentInput:
             state.currentInput === "0" && digit !== "0"
               ? digit
               : state.currentInput + digit,
-          sqrtCount: 0,
-          reciprocalCount: 0,
-          squareCount: 0,
+          operationSequence: [],
           originalValue: null,
         };
       }
@@ -119,25 +132,17 @@ export function calculatorReducer(state, action) {
           ...state,
           currentInput: "0.",
           lastResult: null,
-          sqrtCount: 0,
-          reciprocalCount: 0,
-          squareCount: 0,
+          operationSequence: [],
           originalValue: null,
         };
       }
 
       // Reset operation counts when adding decimal point
-      if (
-        state.sqrtCount > 0 ||
-        state.reciprocalCount > 0 ||
-        state.squareCount > 0
-      ) {
+      if (state.operationSequence.length > 0) {
         return {
           ...state,
           currentInput: state.currentInput + ".",
-          sqrtCount: 0,
-          reciprocalCount: 0,
-          squareCount: 0,
+          operationSequence: [],
           originalValue: null,
         };
       }
@@ -200,9 +205,7 @@ export function calculatorReducer(state, action) {
         expression: baseValue + " " + op,
         currentInput: "0",
         lastResult: null,
-        sqrtCount: 0,
-        reciprocalCount: 0,
-        squareCount: 0,
+        operationSequence: [],
         originalValue: null,
       };
     }
@@ -257,9 +260,7 @@ export function calculatorReducer(state, action) {
         ...state,
         currentInput: "0",
         error: null,
-        sqrtCount: 0,
-        reciprocalCount: 0,
-        squareCount: 0,
+        operationSequence: [],
         originalValue: null,
       };
     }
@@ -300,18 +301,13 @@ export function calculatorReducer(state, action) {
 
       // If we're in the middle of a nested operation, reset the operation counts
       // since negating should start a fresh operation
-      const shouldResetOperations =
-        state.sqrtCount > 0 ||
-        state.reciprocalCount > 0 ||
-        state.squareCount > 0;
+      const shouldResetOperations = state.operationSequence.length > 0;
 
       return {
         ...state,
         currentInput: newInput,
         // Reset operation counts if we were in a nested operation
-        sqrtCount: shouldResetOperations ? 0 : state.sqrtCount,
-        reciprocalCount: shouldResetOperations ? 0 : state.reciprocalCount,
-        squareCount: shouldResetOperations ? 0 : state.squareCount,
+        operationSequence: shouldResetOperations ? [] : state.operationSequence,
         originalValue: shouldResetOperations ? null : state.originalValue,
       };
     }
@@ -324,87 +320,76 @@ export function calculatorReducer(state, action) {
           ...state,
           error: "Invalid input",
           currentInput: "0",
-          sqrtCount: 0,
-          reciprocalCount: 0,
-          squareCount: 0,
+          operationSequence: [],
           originalValue: null,
         };
       }
 
-      // If this is the first sqrt operation or we're starting fresh
-      if (state.sqrtCount === 0 || state.originalValue === null) {
-        const result = formatDisplayNumber(Math.sqrt(current));
+      const result = formatDisplayNumber(Math.sqrt(current));
+
+      // If this is the first operation or we're starting fresh
+      if (
+        state.operationSequence.length === 0 ||
+        state.originalValue === null
+      ) {
         return {
           ...state,
           currentInput: String(result),
           expression: `√(${state.currentInput})`,
           lastResult: result,
-          sqrtCount: 1,
-          reciprocalCount: 0,
-          squareCount: 0,
+          operationSequence: ["sqrt"],
           originalValue: current,
         };
       }
 
-      // For nested sqrt operations, continue from the previous result
-      const result = formatDisplayNumber(
-        Math.sqrt(parseFloat(state.currentInput))
+      // Add sqrt to the operation sequence
+      const newOperationSequence = [...state.operationSequence, "sqrt"];
+      const nestedExpression = buildNestedExpression(
+        state.originalValue,
+        newOperationSequence
       );
-      const newSqrtCount = state.sqrtCount + 1;
-
-      // Build nested sqrt expression
-      let nestedExpression = state.originalValue.toString();
-      for (let i = 0; i < newSqrtCount; i++) {
-        nestedExpression = `√(${nestedExpression})`;
-      }
 
       return {
         ...state,
         currentInput: String(result),
         expression: nestedExpression,
         lastResult: result,
-        sqrtCount: newSqrtCount,
+        operationSequence: newOperationSequence,
       };
     }
 
     case "SQUARE": {
       const current = parseFloat(state.currentInput);
+      const result = formatDisplayNumber(current * current);
 
-      // If this is the first square operation or we're starting fresh
-      if (state.squareCount === 0 || state.originalValue === null) {
-        const result = formatDisplayNumber(current * current);
+      // If this is the first operation or we're starting fresh
+      if (
+        state.operationSequence.length === 0 ||
+        state.originalValue === null
+      ) {
         return {
           ...state,
           currentInput: String(result),
           expression: `sqr(${state.currentInput})`,
           lastResult: result,
-          squareCount: 1,
-          sqrtCount: 0,
-          reciprocalCount: 0,
+          operationSequence: ["square"],
           originalValue: current,
         };
       }
 
-      // For nested square operations, continue from the previous result
-      const result = formatDisplayNumber(
-        parseFloat(state.currentInput) * parseFloat(state.currentInput)
+      // Add square to the operation sequence
+      const newOperationSequence = [...state.operationSequence, "square"];
+      const nestedExpression = buildNestedExpression(
+        state.originalValue,
+        newOperationSequence
       );
-      const newSquareCount = state.squareCount + 1;
-
-      // Build nested square expression
-      let nestedExpression = state.originalValue.toString();
-      for (let i = 0; i < newSquareCount; i++) {
-        nestedExpression = `sqr(${nestedExpression})`;
-      }
 
       return {
         ...state,
         currentInput: String(result),
         expression: nestedExpression,
         lastResult: result,
-        squareCount: newSquareCount,
-        sqrtCount: 0,
-        reciprocalCount: 0,
+        operationSequence: newOperationSequence,
       };
     }
 
@@ -415,46 +400,41 @@ export function calculatorReducer(state, action) {
         return {
           ...state,
           error: "Cannot divide by zero",
-          sqrtCount: 0,
-          reciprocalCount: 0,
-          squareCount: 0,
+          operationSequence: [],
           originalValue: null,
         };
       }
 
-      // If this is the first reciprocal operation or we're starting fresh
-      if (state.reciprocalCount === 0 || state.originalValue === null) {
-        const result = formatDisplayNumber(1 / current);
+      const result = formatDisplayNumber(1 / current);
+
+      // If this is the first operation or we're starting fresh
+      if (
+        state.operationSequence.length === 0 ||
+        state.originalValue === null
+      ) {
         return {
           ...state,
           currentInput: String(result),
           expression: `1/(${state.currentInput})`,
           lastResult: result,
-          reciprocalCount: 1,
-          sqrtCount: 0,
-          squareCount: 0,
+          operationSequence: ["reciprocal"],
           originalValue: current,
         };
       }
 
-      // For nested reciprocal operations, continue from the previous result
-      const result = formatDisplayNumber(1 / parseFloat(state.currentInput));
-      const newReciprocalCount = state.reciprocalCount + 1;
-
-      // Build nested reciprocal expression
-      let nestedExpression = state.originalValue.toString();
-      for (let i = 0; i < newReciprocalCount; i++) {
-        nestedExpression = `1/(${nestedExpression})`;
-      }
+      // Add reciprocal to the operation sequence
+      const newOperationSequence = [...state.operationSequence, "reciprocal"];
+      const nestedExpression = buildNestedExpression(
+        state.originalValue,
+        newOperationSequence
+      );
 
       return {
         ...state,
         currentInput: String(result),
         expression: nestedExpression,
         lastResult: result,
-        reciprocalCount: newReciprocalCount,
-        sqrtCount: 0,
-        squareCount: 0,
+        operationSequence: newOperationSequence,
       };
     }
 
