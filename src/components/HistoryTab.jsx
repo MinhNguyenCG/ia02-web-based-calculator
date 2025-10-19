@@ -68,7 +68,7 @@ export default function HistoryTab({
   if (history.length === 0) {
     const theme = THEME_CLASSES[isDarkMode ? "dark" : "light"];
     return (
-      <div className="h-full flex flex-col px-6">
+      <div className="h-full flex flex-col">
         <div className="flex-1 flex items-center justify-center">
           <div
             className={`text-center ${theme.container} text-sm font-medium mb-1 empty-state-title`}
@@ -76,13 +76,13 @@ export default function HistoryTab({
             There's no history yet
           </div>
         </div>
-        <div className="flex-shrink-0 pt-4 pb-2 flex justify-end clear-button-fixed">
+        <div className="flex-shrink-0 p-4 flex justify-end clear-button-fixed">
           <button
             onClick={onClearHistory}
             className={theme.clearButton}
             aria-label="Clear all history"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -97,27 +97,29 @@ export default function HistoryTab({
   );
 
   return (
-    <div className="h-full flex flex-col px-6">
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto sidebar-scroll space-y-3 pr-2">
-        {sortedHistory.map((item) => (
-          <HistoryItem
-            key={item.timestamp}
-            item={item}
-            onLoadHistory={onLoadHistory}
-            isDarkMode={isDarkMode}
-          />
-        ))}
+    <div className="h-full flex flex-col">
+      {/* Scrollable Content Container */}
+      <div className="flex-1 sidebar-scroll-container">
+        <div className="h-full overflow-y-auto sidebar-scroll space-y-3">
+          {sortedHistory.map((item) => (
+            <HistoryItem
+              key={item.timestamp}
+              item={item}
+              onLoadHistory={onLoadHistory}
+              isDarkMode={isDarkMode}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Fixed Clear Button */}
-      <div className="flex-shrink-0 pt-4 pb-2 flex justify-end clear-button-fixed">
+      <div className="flex-shrink-0 p-4 flex justify-end clear-button-fixed">
         <button
           onClick={onClearHistory}
           className={theme.clearButton}
-          aria-label="Clear all history"
+          aria-label="Clear all memory"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="w-5 h-5" />
         </button>
       </div>
     </div>

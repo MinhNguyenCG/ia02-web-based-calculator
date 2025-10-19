@@ -4,11 +4,7 @@ import Keypad from "@/components/Keypad";
 import Header from "@/components/Header";
 import SidePanel from "@/components/SidePanel";
 import useKeyboard from "@/hooks/useKeyboard";
-import {
-  surfaceGradient,
-  cardGradient,
-  borderMuted,
-} from "@/utils/styleVariants";
+import { cardGradient, borderMuted } from "@/utils/styleVariants";
 import {
   calculatorReducer,
   initialState,
@@ -17,7 +13,6 @@ import {
 
 export default function App() {
   const [state, dispatch] = useReducer(calculatorReducer, initialState);
-  const [historyVisible, setHistoryVisible] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState("history"); // 'history' or 'memory'
 
@@ -26,10 +21,6 @@ export default function App() {
   }, []);
 
   useKeyboard(handleAction);
-
-  const toggleHistory = () => {
-    setHistoryVisible(!historyVisible);
-  };
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
@@ -61,66 +52,105 @@ export default function App() {
 
   return (
     <div
-      className={`calc-container flex items-center justify-center p-2 sm:p-4 transition-all duration-300 ${surfaceGradient(
-        isDarkMode
-      )}`}
+      className={`calc-container transition-all duration-300 ${
+        isDarkMode ? "bg-slate-900" : "bg-gray-100"
+      }`}
     >
-      <div className="w-full h-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-4xl xl:max-w-6xl flex flex-col">
-        {/* Combined Calculator and Side Panel Card */}
+      {/* Mobile Layout */}
+      <div className="lg:hidden h-full flex flex-col">
+        {/* Calculator Card */}
         <div
-          className={`rounded-md shadow-sm overflow-hidden backdrop-blur-sm border h-full flex flex-col ${cardGradient(
+          className={`rounded-md shadow-sm overflow-hidden backdrop-blur-sm border flex flex-col flex-1 ${cardGradient(
             isDarkMode
           )} ${borderMuted(isDarkMode)}`}
         >
-          <div className="flex flex-col lg:flex-row h-full">
-            {/* Main Calculator */}
-            <div className="flex-1 min-w-0 flex flex-col">
-              {/* Header */}
-              <Header
-                isDarkMode={isDarkMode}
-                onToggleTheme={toggleTheme}
-                onToggleHistory={toggleHistory}
-              />
+          {/* Header */}
+          <Header isDarkMode={isDarkMode} onToggleTheme={toggleTheme} />
 
-              {/* Display */}
-              <Display
-                expression={state.expression}
-                currentInput={state.currentInput}
-                error={state.error}
-                isDarkMode={isDarkMode}
-              />
+          {/* Display */}
+          <Display
+            expression={state.expression}
+            currentInput={state.currentInput}
+            error={state.error}
+            isDarkMode={isDarkMode}
+          />
 
-              {/* Keypad */}
-              <Keypad onAction={handleAction} isDarkMode={isDarkMode} />
-            </div>
+          {/* Keypad */}
+          <Keypad onAction={handleAction} isDarkMode={isDarkMode} />
+        </div>
 
-            {/* Side Panel */}
-            <div
-              className={`${
-                historyVisible ? "block" : "hidden"
-              } lg:block flex flex-col`}
-            >
-              <div
-                className={`h-full border-l flex flex-col ${borderMuted(
-                  isDarkMode
-                )}`}
-              >
-                <SidePanel
-                  activeTab={activeTab}
-                  onTabChange={handleTabChange}
-                  history={state.history}
-                  onLoadHistory={(value) =>
-                    handleAction(actions.loadFromHistory(value))
-                  }
-                  onClearHistory={() => handleAction(actions.clearHistory())}
-                  memory={state.memory}
-                  onLoadMemory={handleLoadMemory}
-                  onClearMemory={handleClearMemory}
-                  onMemoryAdd={handleMemoryAdd}
-                  onMemorySubtract={handleMemorySubtract}
-                  onMemoryItemClear={handleMemoryItemClear}
+        {/* Fixed History/Memory Panel at Bottom */}
+        <div className="h-[25vh] min-h-0">
+          <SidePanel
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            history={state.history}
+            onLoadHistory={(value) =>
+              handleAction(actions.loadFromHistory(value))
+            }
+            onClearHistory={() => handleAction(actions.clearHistory())}
+            memory={state.memory}
+            onLoadMemory={handleLoadMemory}
+            onClearMemory={handleClearMemory}
+            onMemoryAdd={handleMemoryAdd}
+            onMemorySubtract={handleMemorySubtract}
+            onMemoryItemClear={handleMemoryItemClear}
+            isDarkMode={isDarkMode}
+          />
+        </div>
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden lg:flex items-center justify-center p-2 sm:p-4 h-full">
+        <div className="w-full h-full max-w-4xl xl:max-w-6xl flex flex-col">
+          {/* Combined Calculator and Side Panel Card */}
+          <div
+            className={`rounded-md shadow-sm overflow-hidden backdrop-blur-sm border h-full flex flex-col ${cardGradient(
+              isDarkMode
+            )} ${borderMuted(isDarkMode)}`}
+          >
+            <div className="flex flex-row h-full">
+              {/* Main Calculator */}
+              <div className="flex-1 min-w-0 flex flex-col">
+                {/* Header */}
+                <Header isDarkMode={isDarkMode} onToggleTheme={toggleTheme} />
+
+                {/* Display */}
+                <Display
+                  expression={state.expression}
+                  currentInput={state.currentInput}
+                  error={state.error}
                   isDarkMode={isDarkMode}
                 />
+
+                {/* Keypad */}
+                <Keypad onAction={handleAction} isDarkMode={isDarkMode} />
+              </div>
+
+              {/* Side Panel */}
+              <div className="flex flex-col">
+                <div
+                  className={`h-full border-l flex flex-col ${borderMuted(
+                    isDarkMode
+                  )}`}
+                >
+                  <SidePanel
+                    activeTab={activeTab}
+                    onTabChange={handleTabChange}
+                    history={state.history}
+                    onLoadHistory={(value) =>
+                      handleAction(actions.loadFromHistory(value))
+                    }
+                    onClearHistory={() => handleAction(actions.clearHistory())}
+                    memory={state.memory}
+                    onLoadMemory={handleLoadMemory}
+                    onClearMemory={handleClearMemory}
+                    onMemoryAdd={handleMemoryAdd}
+                    onMemorySubtract={handleMemorySubtract}
+                    onMemoryItemClear={handleMemoryItemClear}
+                    isDarkMode={isDarkMode}
+                  />
+                </div>
               </div>
             </div>
           </div>

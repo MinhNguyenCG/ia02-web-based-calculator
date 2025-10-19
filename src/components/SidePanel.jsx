@@ -17,12 +17,12 @@ export default function SidePanel({
   isDarkMode = true,
 }) {
   return (
-    <div className="w-full lg:w-96 xl:w-80 py-6 h-full flex flex-col">
+    <div className="w-full lg:w-96 xl:w-80 h-full flex flex-col">
       {/* Tab Navigation */}
-      <div className="flex mb-6 px-6">
+      <div className="flex border-b border-slate-700/50">
         <button
           onClick={() => onTabChange("history")}
-          className={`px-4 py-2 text-sm font-medium transition-all duration-150 relative ${
+          className={`px-3 py-2 text-sm font-medium transition-all duration-150 relative flex-1 ${
             activeTab === "history"
               ? isDarkMode
                 ? "text-cyan-400"
@@ -35,7 +35,7 @@ export default function SidePanel({
           History
           {activeTab === "history" && (
             <div
-              className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-4 h-0.5 ${
+              className={`absolute bottom-0 left-0 right-0 h-0.5 ${
                 isDarkMode ? "bg-cyan-400" : "bg-blue-600"
               }`}
             />
@@ -43,7 +43,7 @@ export default function SidePanel({
         </button>
         <button
           onClick={() => onTabChange("memory")}
-          className={`px-4 py-2 text-sm font-medium transition-all duration-150 relative ${
+          className={`px-3 py-2 text-sm font-medium transition-all duration-150 relative flex-1 ${
             activeTab === "memory"
               ? isDarkMode
                 ? "text-cyan-400"
@@ -56,7 +56,7 @@ export default function SidePanel({
           Memory
           {activeTab === "memory" && (
             <div
-              className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-4 h-0.5 ${
+              className={`absolute bottom-0 left-0 right-0 h-0.5 ${
                 isDarkMode ? "bg-cyan-400" : "bg-blue-600"
               }`}
             />

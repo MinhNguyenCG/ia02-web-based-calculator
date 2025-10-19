@@ -106,7 +106,7 @@ export default function MemoryTab({
   if (memory.length === 0) {
     const theme = memoryTabTheme(isDarkMode);
     return (
-      <div className="h-full flex flex-col px-6">
+      <div className="h-full flex flex-col">
         <div className="flex-1 flex items-center justify-center">
           <div
             className={`text-center ${theme.container} text-sm font-medium mb-1 empty-state-title`}
@@ -114,13 +114,13 @@ export default function MemoryTab({
             There's nothing saved in memory
           </div>
         </div>
-        <div className="flex-shrink-0 pt-4 pb-2 flex justify-end clear-button-fixed">
+        <div className="flex-shrink-0 p-4 flex justify-end clear-button-fixed">
           <button
             onClick={onClearMemory}
             className={theme.clearButton}
             aria-label="Clear all memory"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -135,30 +135,32 @@ export default function MemoryTab({
   );
 
   return (
-    <div className="h-full flex flex-col px-6">
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto sidebar-scroll space-y-1 pr-2">
-        {sortedMemory.map((item) => (
-          <MemoryItem
-            key={item.id}
-            item={item}
-            onLoadMemory={onLoadMemory}
-            onMemoryAdd={onMemoryAdd}
-            onMemorySubtract={onMemorySubtract}
-            onMemoryItemClear={onMemoryItemClear}
-            isDarkMode={isDarkMode}
-          />
-        ))}
+    <div className="h-full flex flex-col">
+      {/* Scrollable Content Container */}
+      <div className="flex-1 sidebar-scroll-container">
+        <div className="h-full overflow-y-auto sidebar-scroll space-y-1">
+          {sortedMemory.map((item) => (
+            <MemoryItem
+              key={item.id}
+              item={item}
+              onLoadMemory={onLoadMemory}
+              onMemoryAdd={onMemoryAdd}
+              onMemorySubtract={onMemorySubtract}
+              onMemoryItemClear={onMemoryItemClear}
+              isDarkMode={isDarkMode}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Fixed Clear Button */}
-      <div className="flex-shrink-0 pt-4 pb-2 flex justify-end clear-button-fixed">
+      <div className="flex-shrink-0 p-4 flex justify-end clear-button-fixed">
         <button
           onClick={onClearMemory}
           className={theme.clearButton}
           aria-label="Clear all memory"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="w-5 h-5" />
         </button>
       </div>
     </div>
