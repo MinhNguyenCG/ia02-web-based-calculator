@@ -1,6 +1,11 @@
 import { evaluate } from "./evaluator";
 import { calculatePercent } from "./percent";
-import { formatResult, formatDisplayNumber } from "./decimal";
+import {
+  formatResult,
+  formatDisplayNumber,
+  preciseSqrt,
+  preciseSquare,
+} from "./decimal";
 
 // Helper function to build nested expression from operation sequence
 function buildNestedExpression(originalValue, operationSequence) {
@@ -325,7 +330,7 @@ export function calculatorReducer(state, action) {
         };
       }
 
-      const result = formatDisplayNumber(Math.sqrt(current));
+      const result = formatDisplayNumber(preciseSqrt(current));
 
       // If this is the first operation or we're starting fresh
       if (
@@ -360,7 +365,7 @@ export function calculatorReducer(state, action) {
 
     case "SQUARE": {
       const current = parseFloat(state.currentInput);
-      const result = formatDisplayNumber(current * current);
+      const result = formatDisplayNumber(preciseSquare(current));
 
       // If this is the first operation or we're starting fresh
       if (

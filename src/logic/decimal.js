@@ -1,15 +1,38 @@
 /**
- * Rounds a number to 12 significant digits to mitigate floating-point errors
+ * Rounds a number to significant digits to mitigate floating-point errors
+ * Enhanced version with better precision handling
  */
 export function roundToSignificantDigits(num, digits = 12) {
   if (num === 0 || !isFinite(num)) return num;
 
   const sign = Math.sign(num);
   const abs = Math.abs(num);
+
+  // Handle very small numbers
+  if (abs < 1e-15) return 0;
+
   const magnitude = Math.floor(Math.log10(abs)) + 1;
   const scale = Math.pow(10, digits - magnitude);
+  const rounded = Math.round(abs * scale) / scale;
 
-  return (sign * Math.round(abs * scale)) / scale;
+  return sign * rounded;
+}
+
+/**
+ * Corrects floating-point errors by comparing with tolerance
+ */
+export function correctFloatingPointError(value, expected, tolerance = 1e-10) {
+  if (Math.abs(value - expected) < tolerance) {
+    return expected;
+  }
+  return value;
+}
+
+/**
+ * Checks if two numbers are close enough (for floating-point comparison)
+ */
+export function isCloseTo(expected, actual, tolerance = 1e-10) {
+  return Math.abs(expected - actual) < tolerance;
 }
 
 /**
@@ -107,16 +130,23 @@ export function formatResult(num) {
 
 /**
  * Formats numbers specifically for display to fix floating-point errors
- * Used only for reciprocal (1/x) and square root (√x) operations
+ * Enhanced version with better precision correction
  */
 export function formatDisplayNumber(value) {
   if (!isFinite(value)) return value;
 
-  // Round to 15 decimal places to handle floating-point precision issues
-  const rounded = Math.round(value * 1e15) / 1e15;
+  // First, apply significant digits rounding
+  const rounded = roundToSignificantDigits(value, 15);
+
+  // Check for common floating-point errors and correct them
+  const corrected = correctFloatingPointError(
+    rounded,
+    Math.round(rounded),
+    1e-10
+  );
 
   // Convert to string and remove trailing zeros
-  let result = rounded.toString();
+  let result = corrected.toString();
 
   // Remove trailing zeros after decimal point
   if (result.includes(".")) {
@@ -127,4 +157,39 @@ export function formatDisplayNumber(value) {
   if (result === ".") result = "0";
 
   return result;
+}
+
+/**
+ * Enhanced square root with floating-point error correction
+ */
+export function preciseSqrt(value) {
+  if (value < 0) throw new Error("Cannot take square root of negative number");
+  if (value === 0) return 0;
+
+  const result = Math.sqrt(value);
+  const rounded = roundToSignificantDigits(result, 15);
+
+  // Check if result is close to an integer
+  const nearestInt = Math.round(rounded);
+  if (isCloseTo(rounded, nearestInt, 1e-10)) {
+    return nearestInt;
+  }
+
+  return rounded;
+}
+
+/**
+ * Enhanced square with floating-point error correction
+ */
+export function preciseSquare(value) {
+  const result = value * value;
+  const rounded = roundToSignificantDigits(result, 15);
+
+  // Check if result is close to an integer
+  const nearestInt = Math.round(rounded);
+  if (isCloseTo(rounded, nearestInt, 1e-10)) {
+    return nearestInt;
+  }
+
+  return rounded;
 }

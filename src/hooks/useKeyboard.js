@@ -84,6 +84,10 @@ export default function useKeyboard(onAction) {
         case "N":
           onAction(actions.negate());
           break;
+        case "r":
+        case "R":
+          onAction(actions.reciprocal());
+          break;
         default:
           // Memory shortcuts with Ctrl
           if (e.ctrlKey) {
