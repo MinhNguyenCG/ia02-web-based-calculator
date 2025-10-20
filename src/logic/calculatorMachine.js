@@ -87,6 +87,15 @@ export function calculatorReducer(state, action) {
     case "INPUT_DIGIT": {
       const digit = action.payload;
 
+      // Enforce a maximum input length similar to display formatting
+      const wouldExceedLimit = (candidate) => {
+        const unsigned = candidate.startsWith("-")
+          ? candidate.slice(1)
+          : candidate;
+        const maxLength = unsigned.startsWith("0.") ? 17 : 16;
+        return unsigned.length > maxLength;
+      };
+
       // Start fresh if we just calculated
       if (state.lastResult !== null && state.expression === "") {
         return {
@@ -100,12 +109,18 @@ export function calculatorReducer(state, action) {
 
       // Reset operation counts when new digits are entered
       if (state.operationSequence.length > 0) {
+        const nextInput =
+          state.currentInput === "0" && digit !== "0"
+            ? digit
+            : state.currentInput + digit;
+
+        if (wouldExceedLimit(nextInput)) {
+          return state;
+        }
+
         return {
           ...state,
-          currentInput:
-            state.currentInput === "0" && digit !== "0"
-              ? digit
-              : state.currentInput + digit,
+          currentInput: nextInput,
           operationSequence: [],
           originalValue: null,
         };
@@ -124,9 +139,14 @@ export function calculatorReducer(state, action) {
         };
       }
 
+      const nextInput = state.currentInput + digit;
+      if (wouldExceedLimit(nextInput)) {
+        return state;
+      }
+
       return {
         ...state,
-        currentInput: state.currentInput + digit,
+        currentInput: nextInput,
       };
     }
 
@@ -158,11 +178,22 @@ export function calculatorReducer(state, action) {
       }
 
       // Add dot to current input
-      return {
-        ...state,
-        currentInput:
-          state.currentInput === "0" ? "0." : state.currentInput + ".",
-      };
+      {
+        const candidate =
+          state.currentInput === "0" ? "0." : state.currentInput + ".";
+        const unsigned = candidate.startsWith("-")
+          ? candidate.slice(1)
+          : candidate;
+        const maxLength = unsigned.startsWith("0.") ? 17 : 16;
+        if (unsigned.length > maxLength) {
+          return state;
+        }
+
+        return {
+          ...state,
+          currentInput: candidate,
+        };
+      }
     }
 
     case "OPERATOR": {
@@ -171,7 +202,16 @@ export function calculatorReducer(state, action) {
       // If we have an existing expression, evaluate it first
       if (state.expression && state.currentInput !== "0") {
         try {
-          const fullExpression = state.expression + " " + state.currentInput;
+          const exprTrimmed = state.expression.trim();
+          let fullExpression;
+          if (/\)\s*$/.test(exprTrimmed)) {
+            const lastSpace = exprTrimmed.lastIndexOf(" ");
+            const prefix =
+              lastSpace >= 0 ? exprTrimmed.slice(0, lastSpace) : exprTrimmed;
+            fullExpression = prefix + " " + state.currentInput;
+          } else {
+            fullExpression = exprTrimmed + " " + state.currentInput;
+          }
           const result = evaluate(fullExpression);
 
           return {
@@ -221,7 +261,16 @@ export function calculatorReducer(state, action) {
       }
 
       try {
-        const fullExpression = state.expression + " " + state.currentInput;
+        const exprTrimmed = state.expression.trim();
+        let fullExpression;
+        if (/\)\s*$/.test(exprTrimmed)) {
+          const lastSpace = exprTrimmed.lastIndexOf(" ");
+          const prefix =
+            lastSpace >= 0 ? exprTrimmed.slice(0, lastSpace) : exprTrimmed;
+          fullExpression = prefix + " " + state.currentInput;
+        } else {
+          fullExpression = exprTrimmed + " " + state.currentInput;
+        }
         const result = evaluate(fullExpression);
 
         // Add to history
@@ -331,6 +380,9 @@ export function calculatorReducer(state, action) {
       }
 
       const result = formatDisplayNumber(preciseSqrt(current));
+      const appliedExpr = `√(${state.currentInput})`;
+      const shouldAppendToPrefix =
+        state.expression && /[+−×÷]$/.test(state.expression.trim());
 
       // If this is the first operation or we're starting fresh
       if (
@@ -340,7 +392,9 @@ export function calculatorReducer(state, action) {
         return {
           ...state,
           currentInput: String(result),
-          expression: `√(${state.currentInput})`,
+          expression: shouldAppendToPrefix
+            ? `${state.expression} ${appliedExpr}`
+            : appliedExpr,
           lastResult: result,
           operationSequence: ["sqrt"],
           originalValue: current,
@@ -357,7 +411,9 @@ export function calculatorReducer(state, action) {
       return {
         ...state,
         currentInput: String(result),
-        expression: nestedExpression,
+        expression: shouldAppendToPrefix
+          ? `${state.expression} ${nestedExpression}`
+          : nestedExpression,
         lastResult: result,
         operationSequence: newOperationSequence,
       };
@@ -366,6 +422,9 @@ export function calculatorReducer(state, action) {
     case "SQUARE": {
       const current = parseFloat(state.currentInput);
       const result = formatDisplayNumber(preciseSquare(current));
+      const appliedExpr = `sqr(${state.currentInput})`;
+      const shouldAppendToPrefix =
+        state.expression && /[+−×÷]$/.test(state.expression.trim());
 
       // If this is the first operation or we're starting fresh
       if (
@@ -375,7 +434,9 @@ export function calculatorReducer(state, action) {
         return {
           ...state,
           currentInput: String(result),
-          expression: `sqr(${state.currentInput})`,
+          expression: shouldAppendToPrefix
+            ? `${state.expression} ${appliedExpr}`
+            : appliedExpr,
           lastResult: result,
           operationSequence: ["square"],
           originalValue: current,
@@ -392,7 +453,9 @@ export function calculatorReducer(state, action) {
       return {
         ...state,
         currentInput: String(result),
-        expression: nestedExpression,
+        expression: shouldAppendToPrefix
+          ? `${state.expression} ${nestedExpression}`
+          : nestedExpression,
         lastResult: result,
         operationSequence: newOperationSequence,
       };
@@ -411,6 +474,9 @@ export function calculatorReducer(state, action) {
       }
 
       const result = formatDisplayNumber(1 / current);
+      const appliedExpr = `1/(${state.currentInput})`;
+      const shouldAppendToPrefix =
+        state.expression && /[+−×÷]$/.test(state.expression.trim());
 
       // If this is the first operation or we're starting fresh
       if (
@@ -420,7 +486,9 @@ export function calculatorReducer(state, action) {
         return {
           ...state,
           currentInput: String(result),
-          expression: `1/(${state.currentInput})`,
+          expression: shouldAppendToPrefix
+            ? `${state.expression} ${appliedExpr}`
+            : appliedExpr,
           lastResult: result,
           operationSequence: ["reciprocal"],
           originalValue: current,
@@ -437,7 +505,9 @@ export function calculatorReducer(state, action) {
       return {
         ...state,
         currentInput: String(result),
-        expression: nestedExpression,
+        expression: shouldAppendToPrefix
+          ? `${state.expression} ${nestedExpression}`
+          : nestedExpression,
         lastResult: result,
         operationSequence: newOperationSequence,
       };

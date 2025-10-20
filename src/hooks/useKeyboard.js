@@ -4,6 +4,31 @@ import { actions } from "../logic/calculatorMachine";
 export default function useKeyboard(onAction) {
   useEffect(() => {
     const handleKeyDown = (e) => {
+      // Memory shortcuts with Ctrl should take precedence over normal keys
+      if (e.ctrlKey) {
+        const key = e.key.toLowerCase();
+        if (["l", "r", "p", "q", "m"].includes(key)) {
+          e.preventDefault();
+          switch (key) {
+            case "l":
+              onAction(actions.memoryClear());
+              return;
+            case "r":
+              onAction(actions.memoryRecall());
+              return;
+            case "p":
+              onAction(actions.memoryAdd());
+              return;
+            case "q":
+              onAction(actions.memorySubtract());
+              return;
+            case "m":
+              onAction(actions.memoryStore());
+              return;
+          }
+        }
+      }
+
       // Prevent default for calculator keys
       if (
         /^[0-9.]$/.test(e.key) ||
@@ -89,31 +114,6 @@ export default function useKeyboard(onAction) {
           onAction(actions.reciprocal());
           break;
         default:
-          // Memory shortcuts with Ctrl
-          if (e.ctrlKey) {
-            switch (e.key.toLowerCase()) {
-              case "l":
-                e.preventDefault();
-                onAction(actions.memoryClear());
-                break;
-              case "r":
-                e.preventDefault();
-                onAction(actions.memoryRecall());
-                break;
-              case "p":
-                e.preventDefault();
-                onAction(actions.memoryAdd());
-                break;
-              case "q":
-                e.preventDefault();
-                onAction(actions.memorySubtract());
-                break;
-              case "m":
-                e.preventDefault();
-                onAction(actions.memoryStore());
-                break;
-            }
-          }
           break;
       }
     };
