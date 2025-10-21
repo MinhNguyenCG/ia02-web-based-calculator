@@ -29,8 +29,8 @@ Một máy tính Windows 11 được tái tạo hoàn hảo với React, có gia
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/your-username/calculator-win11.git
-cd calculator-win11
+git clone https://github.com/MinhNguyenCG/ia02-web-based-calculator.git
+cd ia02-web-based-calculator
 
 # 2. Cài đặt dependencies
 npm install
